@@ -1,6 +1,6 @@
-# Creando nuestra primera API
+# Creando una API para desplegar YOLO
 
-Estas instrucciones son para crear nuestra primera api 🔥
+Ahora levantaremos una API que regrese una respuesta del modelo yolo al recibir una imagen.
 
 ## 1. Creación de un entorno virtual
 
