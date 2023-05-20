@@ -48,7 +48,7 @@ Abre tu navegador web y ve a `http://localhost:8000`. Deberías ver tu mensaje d
 
 ### 5.2 Mediante python
 
-En python, escribiremos un script:
+En python, escribiremos un script llamado `test.py` que contenga:
 
 ```python
 import requests
@@ -56,6 +56,12 @@ import requests
 response = requests.get("http://localhost:8000/")
 
 print(response.json())
+```
+
+Ahora simplemente lo ejecutamos con
+
+```bash
+python test.py
 ```
 
 ## 6. Documentación interactiva
