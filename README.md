@@ -10,6 +10,12 @@ Si seguiste la creación de la primer api, puedes usar el mismo entorno. Para ac
 source venv/bin/activate
 ```
 
+Si no, puedes instalarlo usando
+
+```bash
+pip install -r requirements.txt
+```
+
 ## 2. Creación de la API
 
 ```bash
