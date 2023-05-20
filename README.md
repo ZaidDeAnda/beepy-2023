@@ -12,58 +12,61 @@ source venv/bin/activate
 ## 2. Instalación de requisitos
 
 ```bash
-pip install fastapi uvicorn requests
+pip install -r requirements.txt
 
 ```
 
-## 3. Creación de tu primera API con FastAPI
+## 3. Ejecución de yolo
 
-```
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-```
-
-En este código, estamos definiendo una nueva API con un único endpoint en la ruta `/`. Cuando alguien haga una petición GET a esta ruta, responderemos con un objeto JSON que dice `{"Hello": "World"}`.
-
-## 4. Correr tu aplicación
-
-Ahora puedes correr tu aplicación con el siguiente comando:
-
-```
-uvicorn main:app --reload
-
-```
-
-## 5. Acceder a tu API
-
-### 5.1 Mediante navegador
-
-Abre tu navegador web y ve a `http://localhost:8000`. Deberías ver tu mensaje de saludo: `{"Hello": "World"}`.
-
-### 5.2 Mediante python
-
-En python, escribiremos un script llamado `test.py` que contenga:
+Primero, importamos la librería de ultralytics
 
 ```python
-import requests
-
-response = requests.get("http://localhost:8000/")
-
-print(response.json())
+from ultralytics import YOLO
 ```
 
-Ahora simplemente lo ejecutamos con
+Luego, cargamos el modelo
 
-```bash
-python test.py
+```python
+model = YOLO('yolov8n.pt')
 ```
 
-## 6. Documentación interactiva
+Y ejecutamos inferencia en una imagen de panque
 
-FastAPI genera automáticamente una documentación interactiva (swagger) para tu API. Puedes acceder a ella navegando a `http://localhost:8000/docs` en tu navegador web.
+```python
+results = model("IMG_0009.JPG", save=True)
+```
+
+El argumento `save` es para poder guardar la imagen con la caja de predicción, que encontrarán en el folder `runs/predictx/IMG_0009.JPG` (o en lugar de IMG_'0009.JPG', la imagen que decidan usar)
+
+Imprimimos el resultado para poder debuggearlo
+
+```python
+print(results)
+```
+
+Observamos que es una lista, accedemos a su único elemento
+
+```python
+print(results[0])
+```
+
+Vemos que tiene un atributo `boxes`, accedemos a el 
+Ojo, también tiene un atributo `names`, del que podemos obtener el nombre de la clase
+
+```python
+print(results[0].boxes)
+```
+
+Dentro de este resultado, hay un parámetro `cls`, que nos indica las clases de las predicciones, imprimámoslo
+
+```python
+print(results[0].boxes.cls)
+```
+
+Ahora revisemos a que corresponde esa clase en `results[0].names`
+
+```python
+print(results[0].names[15])
+```
+
+Tenemos un michi detectado!
