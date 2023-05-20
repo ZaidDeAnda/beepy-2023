@@ -70,3 +70,55 @@ print(results[0].names[15])
 ```
 
 Tenemos un michi detectado!
+
+## 4. Despliegue de yolo en una API
+
+Realicemos una API que te diga si una imagen contiene un michi o no.
+
+Empezamos por la api:
+
+```python
+from fastapi import FastAPI, File, UploadFile, Form
+from ultralytics import YOLO
+from PIL import Image
+import io
+
+model = YOLO('yolov8n.pt')
+names = model.names
+
+app = FastAPI()
+
+print("api ejecutándose")
+
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    content = await file.read()
+    image = Image.open(io.BytesIO(content)).convert("RGB")
+    results = model.predict(source=image)
+    results = [names[int(result)] for result in results[0].boxes.cls]
+    return {"prediction": results}
+```
+
+Recibimos en la ruta `/predict` una imagen. Ojo, no se puede recibir una imagen en la ruta (en realidad, puedes usar base 64 para pasarla, pero es un poco mas complicado). Por lo que fastAPI nos permite activar la opción para recibir archivos. Después, lo leemos, convertimos la información de Bytes a una imagen RGB, y realizamos la predicción con el modelo. Ahora solo regresamos las clases que predijo (con un poquito de comprension de listas para regresar los nombres en lugar de los numeros de las clases, mas info (aqui)[https://www.w3schools.com/python/python_lists_comprehension.asp])
+
+Ahora, como este recibe un archivo, solo podemos testearlos con scripts (o aplicaciones como postman). Por ello, realizamos un script `test.py` que contenga:
+
+```python
+import requests
+
+url = 'http://localhost:8000/predict'
+image_path = 'gatos.jpg'  # Ruta de la imagen que deseas enviar
+
+with open(image_path, 'rb') as file:
+    response = requests.post(url, files={'file': file})
+
+print(response)
+prediction = response.json()
+print(prediction)
+if 'cat' in prediction['prediction']:
+    print(f"En la imagen hay un gato :D")
+else:
+    print("No hay un gato :(")
+```
+
+Donde solo cargamos una imagen en memoria, armamos un request con ella y la mandamos. De ahí, checamos si en la respuesta en la llave de predicción existe la clase "gato", y de ser así, imprime que hay un gato!
