@@ -1,0 +1,6 @@
+streamlit
+ultralytics
+--find-links https://download.pytorch.org/whl/torch_stable.html
+
+torch==1.13.0+cpu
+torchvision==0.14.0+cpu
