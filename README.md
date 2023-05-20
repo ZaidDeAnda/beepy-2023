@@ -66,3 +66,7 @@ Después, llamamos la función `draw_bounding_boxes` sobre esta imagen, y la gra
 
     columns[1].write("Imagen dibujada")
 ```
+
+## BONUS: despliegue en streamlit cloud!
+
+Si te registras en https://streamlit.io/, puedes desplegar tu aplicación en la nube de streamlit, para que cualquier persona pueda acceder a ella!
